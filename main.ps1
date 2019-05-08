@@ -8,28 +8,30 @@ if ($Debug) {
     $WaitTime = 5
 }
 else {
-    $WaitTime = 900
+    $WaitTime = 10
 }
-
+# コマンドの入出力を全てログファイルにリダイレクト
+Start-Transcript $LogFile
 # プロキシを外す
-reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings" /f /v ProxyEnable /t reg_dword /d 1
+$path = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings"
+New-ItemProperty -Path $path -Name "ProxyEnable" -Value $true -Propertytype DWord 
 # スタートアップに回復プログラムを登録
-Copy-Item "launch.lnk" "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+Copy-Item "launch-remover.lnk" "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
 # 回復プログラムをコピー
-New-Item $LaunchBase  -ItemType Directory -Force
-Copy-Item "launch.cmd" $LaunchBase 
-Copy-Item "reverse-proxy.ps1" $LaunchBase 
-Copy-Item "set-proxy.ps1" $LaunchBase 
+New-Item $LaunchBase -ItemType Directory -Force
+Copy-Item "launch-remover.cmd" $LaunchBase 
+Copy-Item "remove-grider.ps1" $LaunchBase 
 # ライセンス認証をするよう促すアナウンス
 $ws = New-Object -com Wscript.Shell
 $ws.Popup("30分以内にライセンス認証を行って下さい。")
+Start-Sleep -Seconds $WaitTime
+# 入出力のリダイレクト中止
+Stop-Transcript
 
 # ＜スタートアップに登録するプログラム＞
 # プロキシ再設定
 # スタートアップの登録解除
 # 回復プログラムを削除
-
-Start-Sleep -Seconds ($WaitTime / $Split)
 
 function fff {
     Start-Process .\test.html
