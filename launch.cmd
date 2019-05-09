@@ -1,5 +1,5 @@
 @echo off
-echo "ps1ãƒ•ã‚¡ã‚¤ãƒ«ã‚’å®Ÿè¡Œã—ã¾ã™"
+echo "ps1ƒtƒ@ƒCƒ‹‚ðŽÀs‚µ‚Ü‚·"
 pushd %~dp0
 powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Unrestricted "./main.ps1"
 pause > nul

@@ -1,8 +1,9 @@
+# ＜スタートアップに登録するプログラム＞
+
 # コマンドの入出力を全てログファイルにリダイレクト
 $LogFile = "\\192.168.0.170\supersub\Public Space\Installer【インストーラ】\CAD\CAD AutoDesk\$env:COMPUTERNAME.log"
 Start-Transcript $LogFile
 $LaunchBase = $env:HOMEDRIVE + "\ProxyGrider"
-
 #レジストリキー
 $REGIST_PATH = "Registry::HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings"
 #エントリ名
@@ -30,21 +31,27 @@ function EntryExists{
     }
 }
 
-# プロキシを外す
+# プロキシ再設定
 if (EntryExists) {
-    Remove-ItemProperty -Path $REGIST_PATH -Name $ENTRY_NAME -Force
+    Set-ItemProperty -Path $REGIST_PATH -Name $ENTRY_NAME -Value $true
 }
-# スタートアップに回復プログラムを登録
-Copy-Item "launch-remover.lnk" "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
-# 回復プログラムをコピー
-New-Item $LaunchBase -ItemType Directory -Force
-Copy-Item "launch-remover.cmd" $LaunchBase 
-Copy-Item "remove-grider.ps1" $LaunchBase 
+else {
+    New-ItemProperty -Path $REGIST_PATH -Name $ENTRY_NAME -Value $true -PropertyType DWord
+}
+# スタートアップの登録解除
+$remove="$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\launch-remover.lnk"
+if (Test-Path $remove) {
+    Remove-Item $remove
+}
+# 回復プログラムを削除
+if (Test-Path $LaunchBase) {
+    Remove-Item -Path "$LaunchBase\*" -Force -Recurse
+    # Remove-Item -Path $LaunchBase -Force -Recurse
+}
+# 時間差
+# Start-Sleep -Seconds $WaitTime
 # 入出力のリダイレクト中止
 Stop-Transcript
-# ライセンス認証をするよう促すアナウンス
+# 設定完了アナウンス
 $ws = New-Object -com Wscript.Shell
-$ws.Popup("30分以内にライセンス認証を行って下さい。")
-# Start-Sleep -Seconds $WaitTime
-
- 
+$ws.Popup("ライセンス認証待機状態から復帰しました。")
