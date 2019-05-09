@@ -40,6 +40,17 @@ Copy-Item "launch-remover.lnk" "$env:userprofile\AppData\Roaming\Microsoft\Windo
 New-Item $LaunchBase -ItemType Directory -Force
 Copy-Item "launch-remover.cmd" $LaunchBase 
 Copy-Item "remove-grider.ps1" $LaunchBase 
+
+# カレントフォルダ（カレントディレクトリ）のパスを取得
+$str_path = (Convert-Path .)
+
+#######################
+# IE起動と画面表示
+#######################
+$ie = New-Object -ComObject InternetExplorer.Application  # IE起動
+$ie.Navigate("$str_path\complete.html")                            # URL指定
+$ie.Visible = $true                                       # 表示
+
 # 入出力のリダイレクト中止
 Stop-Transcript
 # ライセンス認証をするよう促すアナウンス
@@ -47,4 +58,3 @@ $ws = New-Object -com Wscript.Shell
 $ws.Popup("30分以内にライセンス認証を行って下さい。",0,"ライセンス認証補助プログラム",0)
 # Start-Sleep -Seconds $WaitTime
 
- 
