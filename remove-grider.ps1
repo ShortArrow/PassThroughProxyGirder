@@ -54,4 +54,4 @@ if (Test-Path $LaunchBase) {
 Stop-Transcript
 # 設定完了アナウンス
 $ws = New-Object -com Wscript.Shell
-$ws.Popup("ライセンス認証待機状態から復帰しました。")
+$ws.Popup("ライセンス認証待機状態から復帰しました。",0,"ライセンス認証補助プログラム",0)
