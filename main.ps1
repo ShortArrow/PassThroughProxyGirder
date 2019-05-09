@@ -54,7 +54,7 @@ $ie.Visible = $true                                       # 表示
 # 入出力のリダイレクト中止
 Stop-Transcript
 # ライセンス認証をするよう促すアナウンス
-$ws = New-Object -com Wscript.Shell
-$ws.Popup("30分以内にライセンス認証を行って下さい。",0,"ライセンス認証補助プログラム",0)
+#$ws = New-Object -com Wscript.Shell
+#$ws.Popup("30分以内にライセンス認証を行って下さい。",0,"ライセンス認証補助プログラム",0)
 # Start-Sleep -Seconds $WaitTime
 
